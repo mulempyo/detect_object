@@ -9,7 +9,7 @@ project(detect_object)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   costmap_2d
-  gd_visual_detection_3d_msgs
+  gb_visual_detection_3d_msgs
   geometry_msgs
   roscpp
   std_msgs
@@ -108,7 +108,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
   INCLUDE_DIRS include
 #  LIBRARIES detect_object
-  CATKIN_DEPENDS costmap_2d gd_visual_detection_3d_msgs geometry_msgs roscpp std_msgs tf2
+  CATKIN_DEPENDS costmap_2d gb_visual_detection_3d_msgs geometry_msgs roscpp std_msgs tf2
 #  DEPENDS system_lib
 )
 
@@ -205,9 +205,9 @@ include_directories(
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
 
-add_executable(bounding_boxes_3d_distance src/detect_object.cpp)
-target_link_libraries(bounding_boxes_3d_distance ${catkin_LIBRARIES})
-add_dependencies(bounding_boxes_3d_distance ${catkin_EXPORTED_TARGETS})
+add_executable(bounding_boxes_3d src/detect_object.cpp)
+target_link_libraries(bounding_boxes_3d ${catkin_LIBRARIES})
+add_dependencies(bounding_boxes_3d ${catkin_EXPORTED_TARGETS})
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)

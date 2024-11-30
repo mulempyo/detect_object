@@ -1,11 +1,11 @@
-#include <dect_object/detect_object.h>
-#include <ros/ros.h>
+#include <detect_object/detect_object.h>
+#include "ros/ros.h"
 #include <costmap_2d/costmap_2d_ros.h>
-#include <std_msgs::Bool.h>
-#include <gd_visual_detection_3d_msgs/BoundingBoxes3d.h>
+#include <std_msgs/Bool.h>
+#include <gb_visual_detection_3d_msgs/BoundingBoxes3d.h>
 #include <cmath>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
-#include <geometry_msgs/PointStamped.h>
+#include <geometry_msgs/PoseStamped.h>
 
 namespace detect{
 
@@ -13,7 +13,7 @@ void Detect::subCostmap(costmap_2d::Costmap2DROS* costmap_ros){ //using local pl
     costmap_ros_ = costmap_ros;
 }
 
-void Detect::boundingBoxCallback(const gd_visual_detection_3d_msgs::BoundingBoxes3d::ConstPtr& msg)
+void Detect::boundingBoxCallback(const gb_visual_detection_3d_msgs::BoundingBoxes3d::ConstPtr& msg)
 {
 
     for (const auto& box : msg->bounding_boxes)
@@ -32,7 +32,7 @@ void Detect::boundingBoxCallback(const gd_visual_detection_3d_msgs::BoundingBoxe
 
             float theta = std::atan2(center_y, center_x);
 
-            geometry_msgs::PointStamped current_pose_;
+            geometry_msgs::PoseStamped current_pose_;
             costmap_ros_->getRobotPose(current_pose_);
 
             cameraToWorld(obstacle_x, obstacle_y, distance, theta, current_pose_.pose.position.x, current_pose_.pose.position.y);
@@ -65,29 +65,31 @@ void Detect::boundingBoxCallback(const gd_visual_detection_3d_msgs::BoundingBoxe
     camera_yaw = world_yaw - theta;
   }
 
-  float Detect::camera_x(){
+  float Detect::cameraX(){
     camera_x = world_x;
     return camera_x;
   }
 
-  float Detect::camera_y(){
+  float Detect::cameraY(){
     camera_y = world_y;
     return camera_y;
   }
 
-  float Detect::camera_yaw(){
+  float Detect::cameraYaw(){
     return camera_yaw;
   }
 } //namespace
 
 int main(int argc, char** argv)
 {
-    ros::init(argc, argv, "bounding_boxes_3d_distance");
+    ros::init(argc, argv, "bounding_boxes_3d");
     ros::NodeHandle nh;
+
+    detect::Detect detector;
     
-    sub = nh.subscribe("/darknet_ros_3d/bounding_boxes", 10, &Detect::boundingBoxCallback, this);
-    pub = nh.advertise<std_msgs::Bool>("3d_object_detection_true",10);
-    pub1 = nh.advertise<std_msgs::Bool>("person_probabilty",10);
+    detector.sub = nh.subscribe("/darknet_ros_3d/bounding_boxes", 10, &detect::Detect::boundingBoxCallback, &detector);
+    detector.pub = nh.advertise<std_msgs::Bool>("3d_object_detection_true",10);
+    detector.pub1 = nh.advertise<std_msgs::Bool>("person_probabilty",10);
 
     ros::spin();
     return 0;
