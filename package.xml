@@ -50,19 +50,19 @@
   <!--   <doc_depend>doxygen</doc_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>costmap_2d</build_depend>
-  <build_depend>gd_visual_detection_3d_msgs</build_depend>
+  <build_depend>gb_visual_detection_3d_msgs</build_depend>
   <build_depend>geometry_msgs</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>std_msgs</build_depend>
   <build_depend>tf2</build_depend>
   <build_export_depend>costmap_2d</build_export_depend>
-  <build_export_depend>gd_visual_detection_3d_msgs</build_export_depend>
+  <build_export_depend>gb_visual_detection_3d_msgs</build_export_depend>
   <build_export_depend>geometry_msgs</build_export_depend>
   <build_export_depend>roscpp</build_export_depend>
   <build_export_depend>std_msgs</build_export_depend>
   <build_export_depend>tf2</build_export_depend>
   <exec_depend>costmap_2d</exec_depend>
-  <exec_depend>gd_visual_detection_3d_msgs</exec_depend>
+  <exec_depend>gb_visual_detection_3d_msgs</exec_depend>
   <exec_depend>geometry_msgs</exec_depend>
   <exec_depend>roscpp</exec_depend>
   <exec_depend>std_msgs</exec_depend>
