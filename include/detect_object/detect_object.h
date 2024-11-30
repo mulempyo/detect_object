@@ -2,7 +2,6 @@
 #define DETECT_OBJECT_H
 
 #include <ros/ros.h>
-#include <std_msgs::Float64.h>
 #include <costmap_2d/costmap_2d_ros.h>
 #include <std_msgs::Bool.h>
 #include <gd_visual_detection_3d_msgs/BoundingBoxes3d.h>
@@ -18,11 +17,11 @@ namespace detect{
         ros::Publisher pub1;
         ros::Subscriber sub;
 
-        std_msgs::Float64 distance_msg;
-
+        std_msgs::Bool detect_pottedplant_msg;
         std_msgs::Bool detected_person_msg;
 
         bool detected_person = false;
+        bool detected_pottedplant = false;
 
         float center_x;
         float center_y;
@@ -32,19 +31,18 @@ namespace detect{
         float theta_y;
         float camera_x;
         float camera_y;
-        float world_x, world_y;
-
-        costmap_2d::Costmap2DROS* costmap_ros_;
+        float camera_yaw;
+        float world_x, world_y, world_yaw;
 
         void boundingBoxCallback(const gd_visual_detection_3d_msgs::BoundingBoxes3d::ConstPtr& msg);
-        void initialize(ros::NodeHandle& nh);
+        void subCostmap(costmap_2d::Costmap2DROS* costmap_ros);
         
         float camera_x();
         float camera_y();
+        float camera_yaw();
 
         private:
-            void cameraToWorld(double center_x, double center_y, double robot_pose_x, double robot_pose_y, double robot_pose_theta);
-            void subCostmap(costmap_2d::Costmap2D* costmap);
+            void cameraToWorld(float obstacle_x, float obstacle_y, float distance, float theta);
     }
 }
 
