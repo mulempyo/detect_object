@@ -39,21 +39,35 @@ void Detect::boundingBoxCallback(const gb_visual_detection_3d_msgs::BoundingBoxe
             float obstacle_z = 0.18;
 
             float theta = std::atan2(center_y, center_x);
+            float world_x, world_y, world_yaw;
 
-            cameraToWorld(obstacle_x, obstacle_y, distance, theta);
-                
-            pottedplant.data = 1.0;
-            ROS_WARN("detect_pottedplant_msg.data:%f",pottedplant.data);
-            pub.publish(pottedplant); 
+            cameraToWorld(obstacle_x, obstacle_y, distance, theta, world_x, world_y, world_yaw);
+            
+            camera_x = world_x;
+            camera_y = world_y;
+            camera_yaw = world_yaw - theta;
+            ROS_WARN("detect_object x:%f,y:%f, yaw:%f",camera_x,camera_y,camera_yaw);
+
+            geometry_msgs::PoseStamped camera;
+            camera.pose.position.x = camera_x;
+            camera.pose.position.y = camera_y; 
+            
+            tf2::Quaternion q;
+            q.setRPY(0,0,camera_yaw);    
+            camera.pose.orientation.x = q.x();
+            camera.pose.orientation.y = q.y();
+            camera.pose.orientation.z = q.z();
+            camera.pose.orientation.w = q.w();
+            pub.publish(camera); 
         }
     }
    person.data = 1.0;
    pub1.publish(person);
   }
 
-  void Detect::cameraToWorld(float obstacle_x, float obstacle_y, float distance, float theta){
-    world_x = obstacle_x + distance * std::cos(theta);
-    world_y = obstacle_y + distance * std::sin(theta);
+  void Detect::cameraToWorld(float obstacle_x, float obstacle_y, float distance, float theta, float& world_x, float& world_y, float& world_yaw){
+    world_x = obstacle_x - distance * std::cos(theta);
+    world_y = obstacle_y - distance * std::sin(theta);
 
     geometry_msgs::PoseStamped camera_world;
     camera_world.header.frame_id = "camera_link";
@@ -66,22 +80,8 @@ void Detect::boundingBoxCallback(const gb_visual_detection_3d_msgs::BoundingBoxe
     tf2::doTransform(camera_world, robot, transformStamped);
 
     world_yaw = std::atan2(world_y - robot.pose.position.y, world_x - robot.pose.position.x);
-    camera_yaw = world_yaw - theta;
   }
 
-  float Detect::cameraX(){
-    camera_x = world_x;
-    return camera_x;
-  }
-
-  float Detect::cameraY(){
-    camera_y = world_y;
-    return camera_y;
-  }
-
-  float Detect::cameraYaw(){
-    return camera_yaw;
-  }
 } //namespace
 
 int main(int argc, char** argv)
@@ -92,12 +92,9 @@ int main(int argc, char** argv)
     detect::Detect detector;
     
     detector.sub = nh.subscribe("/darknet_ros_3d/bounding_boxes", 10, &detect::Detect::boundingBoxCallback, &detector);
-    detector.pub = nh.advertise<std_msgs::Float64>("object_detection_true",10);
+    detector.pub = nh.advertise<geometry_msgs::PoseStamped>("object_detection_true",10);
     detector.pub1 = nh.advertise<std_msgs::Float64>("person_probabilty",10);
 
     ros::spin();
     return 0;
 }
-
-
-

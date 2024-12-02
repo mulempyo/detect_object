@@ -33,18 +33,13 @@ namespace detect{
         float camera_x;
         float camera_y;
         float camera_yaw;
-        float world_x, world_y, world_yaw;
 
         void boundingBoxCallback(const gb_visual_detection_3d_msgs::BoundingBoxes3d::ConstPtr& msg);
-        
-        float cameraX();
-        float cameraY();
-        float cameraYaw();
 
         private:
            std::shared_ptr<tf2_ros::Buffer> tf_;
            std::shared_ptr<tf2_ros::TransformListener> tfl_;
-            void cameraToWorld(float obstacle_x, float obstacle_y, float distance, float theta);
+            void cameraToWorld(float obstacle_x, float obstacle_y, float distance, float theta, float& world_x, float& world_y, float& world_yaw);
     };
 }
 
