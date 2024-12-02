@@ -108,7 +108,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
   INCLUDE_DIRS include
 #  LIBRARIES detect_object
-  CATKIN_DEPENDS costmap_2d gb_visual_detection_3d_msgs geometry_msgs roscpp std_msgs tf2
+  CATKIN_DEPENDS costmap_2d gb_visual_detection_3d_msgs geometry_msgs roscpp std_msgs tf2 
 #  DEPENDS system_lib
 )
 
