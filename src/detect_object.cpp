@@ -60,10 +60,17 @@ void Detect::boundingBoxCallback(const gb_visual_detection_3d_msgs::BoundingBoxe
             camera.pose.orientation.w = q.w();
             pub.publish(camera); 
         }
+
+      if(box.Class == "person" && box.probability > 50){
+           person.data = 1.0;
+      }else{
+        person.data = 0.0; 
+       }
+
+      pub1.publish(person);
+
     }
-   person.data = 1.0;
-   pub1.publish(person);
-  }
+ }
 
   void Detect::cameraToWorld(float obstacle_x, float obstacle_y, float distance, float theta, float& world_x, float& world_y, float& world_yaw){
     world_x = obstacle_x - distance * std::cos(theta);
