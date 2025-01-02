@@ -23,12 +23,9 @@ Detect::~Detect(){
 }
 
 void Detect::boundingBoxCallback(const gb_visual_detection_3d_msgs::BoundingBoxes3d::ConstPtr& msg)
-{
+  {
     for (const auto& box : msg->bounding_boxes)
     {
-        if (box.Class == "pottedplant")
-        {
-            
       if(box.Class == "person" && box.probability > 50){
            person.data = 1.0;
          }else{
@@ -37,9 +34,7 @@ void Detect::boundingBoxCallback(const gb_visual_detection_3d_msgs::BoundingBoxe
 
          pub1.publish(person);
          }
-       }
-}
-
+  }
 } //namespace
 
 int main(int argc, char** argv)
