@@ -50,7 +50,6 @@ int main(int argc, char** argv)
     detect::Detect detector;
     
     detector.sub = nh.subscribe("/darknet_ros_3d/bounding_boxes", 10, &detect::Detect::boundingBoxCallback, &detector);
-    detector.pub = nh.advertise<geometry_msgs::PoseStamped>("object_detection_true",10);
     detector.pub1 = nh.advertise<std_msgs::Float64>("person_probabilty",10);
 
     ros::spin();
